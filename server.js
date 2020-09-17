@@ -1,9 +1,27 @@
 const express = require("express");
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 
 app.use(fileUpload());
+
+mongoose.connect("mongodb://localhost:27017/aviosDB", { useNewUrlParser: true, useUnifiedTopology: true });
+
+const productSchema = {
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  dateUploaded: { type: Date, required: true },
+  dateEdited: Date
+
+}
+
+const Product = mongoose.model("Post", productSchema);
+
+const uploadRouter = require("./routes/upload")
+
+app.use("/upload", uploadRouter)
 
 // Upload endpoint
 app.post("/upload", (req, res) => {
